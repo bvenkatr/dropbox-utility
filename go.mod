@@ -3,10 +3,8 @@ module dropbox-utility
 go 1.13
 
 require (
+	github.com/dropbox/dropbox-sdk-go-unofficial v5.4.0+incompatible
 	github.com/joho/godotenv v1.3.0
-	github.com/segmentio/go-env v1.1.0 // indirect
-	github.com/stretchr/testify v1.4.0 // indirect
-	github.com/tj/go-dropbox v0.0.0-20171107035848-42dd2be3662d
-	github.com/tj/go-dropy v0.0.0-20151223190506-225699a12156
-	github.com/ungerik/go-dry v0.0.0-20180411133923-654ae31114c8 // indirect
+	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553 // indirect
+	golang.org/x/oauth2 v0.0.0-20191202225959-858c2ad4c8b6 // indirect
 )

@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
+	"github.com/dropbox/dropbox-sdk-go-unofficial/dropbox"
+	"github.com/dropbox/dropbox-sdk-go-unofficial/dropbox/users"
 	"github.com/joho/godotenv"
-	"github.com/tj/go-dropbox"
-	"github.com/tj/go-dropy"
 )
 
 func main() {
@@ -15,19 +15,11 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	client := dropy.New(dropbox.New(dropbox.NewConfig(os.Getenv("DROPBOX_ACCESS_TOKEN"))))
-	filesList, err := client.ListFiles("/test1/")
-	if err != nil {
-		fmt.Println("Got error while listing the files ", err)
+	config := dropbox.Config{
+		Token:    os.Getenv("DROPBOX_ACCESS_TOKEN"),
+		LogLevel: dropbox.LogInfo, // if needed, set the desired logging level. Default is off
 	}
-
-	fmt.Println(len(filesList))
-
-	// fileNamesList := []string{}
-	for v, fileInfo := range filesList {
-		// fileNamesList = append(fileNamesList, fileInfo.Name())
-		fmt.Println(v)
-		fmt.Println(fileInfo.Name())
-	}
-	// fmt.Println("List of file name are", fileNamesList)
+	dbx := users.New(config)
+	// start making API calls
+	fmt.Println(dbx)
 }
