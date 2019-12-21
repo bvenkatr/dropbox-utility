@@ -16,3 +16,5 @@
 
 dropbox-utility
 .env
+__debug_bin
+vendor/

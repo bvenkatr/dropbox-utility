@@ -16,16 +16,18 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 	client := dropy.New(dropbox.New(dropbox.NewConfig(os.Getenv("DROPBOX_ACCESS_TOKEN"))))
-	filesList, err := client.ListN("", 2)
+	filesList, err := client.ListFiles("/test1/")
 	if err != nil {
 		fmt.Println("Got error while listing the files ", err)
 	}
 
 	fmt.Println(len(filesList))
 
-	fileNamesList := []string{}
-	for _, fileInfo := range filesList {
-		fileNamesList = append(fileNamesList, fileInfo.Name())
+	// fileNamesList := []string{}
+	for v, fileInfo := range filesList {
+		// fileNamesList = append(fileNamesList, fileInfo.Name())
+		fmt.Println(v)
+		fmt.Println(fileInfo.Name())
 	}
-	fmt.Println("List of file name are", fileNamesList)
+	// fmt.Println("List of file name are", fileNamesList)
 }
