@@ -10,6 +10,29 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func listOfFilesToBeDownloaded(dbx files.Client) []files.IsMetadata {
+	// start making API calls
+	s := files.NewListFolderArg("")
+	s.Recursive = true
+	res, err := dbx.ListFolder(s)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var entries []files.IsMetadata
+	entries = res.Entries
+	var n int
+	for _, entry := range entries {
+		switch entry.(type) {
+		case *files.FileMetadata:
+			// printFileMetadata(f)
+			entries[n] = entry
+			n++
+		}
+	}
+	return entries[:n]
+}
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -23,27 +46,9 @@ func main() {
 		Token: os.Getenv("DROPBOX_ACCESS_TOKEN"),
 	}
 	dbx := files.New(config)
-	// s := new(files.ListFolderResult)
-
-	// start making API calls
-	s := files.NewListFolderArg("")
-	s.Recursive = true
-	res, err := dbx.ListFolder(s)
-	if err != nil {
-		fmt.Println(err)
+	res := listOfFilesToBeDownloaded(dbx)
+	for i, entry := range res {
+		value := entry.(*files.FileMetadata)
+		fmt.Printf("%v.   %s,  %s\n", i, value.PathLower, value.ContentHash)
 	}
-
-	var entries []files.IsMetadata
-	entries = res.Entries
-
-	for _, entry := range entries {
-		switch f := entry.(type) {
-		case *files.FileMetadata:
-			printFileMetadata(f)
-		}
-	}
-}
-
-func printFileMetadata(e *files.FileMetadata) {
-	fmt.Printf("%s\n", e.PathDisplay)
 }
