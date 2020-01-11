@@ -26,7 +26,9 @@ func main() {
 	// s := new(files.ListFolderResult)
 
 	// start making API calls
-	res, err := dbx.ListFolder(files.NewListFolderArg(""))
+	s := files.NewListFolderArg("")
+	s.Recursive = true
+	res, err := dbx.ListFolder(s)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -34,25 +36,14 @@ func main() {
 	var entries []files.IsMetadata
 	entries = res.Entries
 
-	for i, entry := range entries {
+	for _, entry := range entries {
 		switch f := entry.(type) {
 		case *files.FileMetadata:
 			printFileMetadata(f)
-		case *files.FolderMetadata:
-			printFolderMetadata(f)
-		}
-		if i%4 == 0 {
-			fmt.Println("i%4 == 0...., nothing ")
 		}
 	}
 }
 
-func printFolderMetadata(e *files.FolderMetadata) {
-	fmt.Println("*files.FileMetadata....")
-	fmt.Printf("%s\t\n", e.PathDisplay)
-}
-
 func printFileMetadata(e *files.FileMetadata) {
-	fmt.Println("*files.FolderMetadata....")
-	fmt.Printf("%s\t", e.PathDisplay)
+	fmt.Printf("%s\n", e.PathDisplay)
 }
