@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
-
 	"github.com/dropbox/dropbox-sdk-go-unofficial/dropbox"
 	"github.com/dropbox/dropbox-sdk-go-unofficial/dropbox/files"
 	"github.com/joho/godotenv"
+	"io"
+	"log"
+	"os"
 )
 
 func listOfFilesToBeDownloaded(dbx files.Client) []files.IsMetadata {
@@ -50,5 +50,20 @@ func main() {
 	for i, entry := range res {
 		value := entry.(*files.FileMetadata)
 		fmt.Printf("%v.   %s,  %s\n", i, value.PathLower, value.ContentHash)
+		d := &files.DownloadArg{Path: value.PathLower}
+		f, data, err := dbx.Download(d)
+		if err != nil {
+			log.Fatal(err)
+		}
+		outFile, err := os.Create("/tmp/" + f.Name)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// handle err
+		defer outFile.Close()
+		_, err = io.Copy(outFile, data)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
